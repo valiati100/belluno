@@ -20,14 +20,14 @@ We recommend that you have a testing environment to validate changes and updates
 
 Download the module and follow the steps below:
 
-[Belluno-Magento](https://github.com/tezusecommerce/Belluno_Magento2)
+[Belluno-Magento](https://github.com/bellunodigital/magento2)
 
 #### Installation using composer
 
 1. Install via packagist:
 
    ```
-   composer require belluno/magento2
+   composer require belluno/module-magento
    ```
 
    At this time, you may be asked for your Magento authentication credentials. If in doubt, there is documentation that will help you. [Link](https://devdocs.magento.com/guides/v2.3/install-gde/prereq/connect-auth.html)
