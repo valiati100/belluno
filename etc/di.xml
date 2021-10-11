@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+  
+  <preference for="Belluno\Magento2\Api\UpdateStatusBankSlipInterface" type="Belluno\Magento2\Model\Api\UpdateStatusBankSlip"/>
+
+  <!-- CREDIT CARD -->
+  <!-- Payment Method Facade configuration -->
+  <virtualType name="BellunoMagento2FacadeCc" type="Magento\Payment\Model\Method\Adapter">
+    <arguments>
+      <argument name="code" xsi:type="const">Belluno\Magento2\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+      <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+      <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+      <argument name="valueHandlerPool" xsi:type="object">BellunoMagento2ValueHandlerPoolCc</argument>
+      <argument name="commandPool" xsi:type="object">BellunoMagento2CommandPoolCc</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Value handlers infrastructure -->
+  <virtualType name="BellunoMagento2ValueHandlerPoolCc" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <arguments>
+      <argument name="handlers" xsi:type="array">
+        <item name="default" xsi:type="string">BellunoMagento2ValueHandlerCc</item>
+      </argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="BellunoMagento2ValueHandlerCc" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <arguments>
+      <argument name="configInterface" xsi:type="object">BellunoMagento2ConfigCc</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Configuration reader -->
+  <virtualType name="BellunoMagento2ConfigCc" type="Magento\Payment\Gateway\Config\Config">
+    <arguments>
+      <argument name="methodCode" xsi:type="const">Belluno\Magento2\Model\Ui\CreditCard\ConfigProvider::CODE</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Commands infrastructure cc -->
+  <virtualType name="BellunoMagento2CommandPoolCc" type="Magento\Payment\Gateway\Command\CommandPool">
+    <arguments>
+      <argument name="commands" xsi:type="array">
+        <item name="authorize" xsi:type="string">BellunoAuthorizeCommandCc</item>
+        <item name="sale" xsi:type="string">BellunoAuthorizeCommandCc</item>
+        <!-- refund, cancel and void use the same API link -->
+        <item name="refund" xsi:type="string">BellunoRefundCommandCc</item>
+        <item name="cancel" xsi:type="string">BellunoRefundCommandCc</item>
+        <item name="void" xsi:type="string">BellunoRefundCommandCc</item>
+        <!-- refund, cancel and void use the same API link -->
+        <item name="capture" xsi:type="string">BellunoCcCaptureStrategyCommand</item>
+        <item name="settlement" xsi:type="string">BellunoSettlementCommandCc</item>
+      </argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Refund command -->
+  <virtualType name="BellunoRefundCommandCc" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <arguments>
+      <argument name="requestBuilder" xsi:type="object">BellunoRefundRequestCc</argument>
+      <argument name="transferFactory" xsi:type="object">Belluno\Magento2\Gateway\Http\TransferFactory</argument>
+      <argument name="client" xsi:type="object">Belluno\Magento2\Gateway\Http\Client\RefundClientCc</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Capture Strategy Command definition -->
+  <virtualType name="BellunoCcCaptureStrategyCommand" type="Belluno\Magento2\Gateway\Command\CaptureStrategyCommand">
+    <arguments>
+      <argument name="commandPool" xsi:type="object">BellunoMagento2CommandPoolCc</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Authorize command -->
+  <virtualType name="BellunoAuthorizeCommandCc" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <arguments>
+      <argument name="requestBuilder" xsi:type="object">BellunoAuthorizationRequestCc</argument>
+      <argument name="transferFactory" xsi:type="object">Belluno\Magento2\Gateway\Http\TransferFactory</argument>
+      <argument name="client" xsi:type="object">Belluno\Magento2\Gateway\Http\Client\AuthorizeClientCc</argument>
+      <argument name="handler" xsi:type="object">BellunoAcceptPaymentResponseHandlerCompositeCc</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Settlement (capture) command -->
+  <virtualType name="BellunoSettlementCommandCc" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <arguments>
+      <argument name="requestBuilder" xsi:type="object">BellunoSettlementRequestCc</argument>
+      <argument name="transferFactory" xsi:type="object">Belluno\Magento2\Gateway\Http\TransferFactory</argument>
+      <argument name="client" xsi:type="object">Belluno\Magento2\Gateway\Http\Client\SettlementClientCc</argument>
+      <argument name="handler" xsi:type="object">BellunoAcceptPaymentHandlerSettlementCc</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Authorization Request -->
+  <virtualType name="BellunoAuthorizationRequestCc" type="Magento\Payment\Gateway\Request\BuilderComposite">
+    <arguments>
+      <argument name="builders" xsi:type="array">
+        <item name="credit_card_data" xsi:type="string">Belluno\Magento2\Gateway\Request\CreditCardDataRequest</item>
+        <item name="shipping" xsi:type="string">Belluno\Magento2\Gateway\Request\CreditCardShippingnRequest</item>
+        <item name="billing" xsi:type="string">Belluno\Magento2\Gateway\Request\CreditCardBillingRequest</item>
+        <item name="cart" xsi:type="string">Belluno\Magento2\Gateway\Request\CreditCardCartRequest</item>
+        <item name="postback" xsi:type="string">Belluno\Magento2\Gateway\Request\CreditCardPostbackRequest</item>
+      </argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Refund Request -->
+  <virtualType name="BellunoRefundRequestCc" type="Magento\Payment\Gateway\Request\BuilderComposite">
+    <arguments>
+      <argument name="builders" xsi:type="array">
+        <item name="cancel_data" xsi:type="string">Belluno\Magento2\Gateway\Request\RefundRequest</item>
+      </argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Capture Request -->
+  <virtualType name="BellunoSettlementRequestCc" type="Magento\Payment\Gateway\Request\BuilderComposite">
+    <arguments>
+      <argument name="builders" xsi:type="array">
+        <item name="settlement_data" xsi:type="string">Belluno\Magento2\Gateway\Request\SettlementRequest</item>
+      </argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Accept Payment handlers authorize and sale -->
+  <virtualType name="BellunoAcceptPaymentResponseHandlerCompositeCc" type="Magento\Payment\Gateway\Response\HandlerChain">
+    <arguments>
+      <argument name="handlers" xsi:type="array">
+        <item name="accept" xsi:type="string">Belluno\Magento2\Gateway\Response\AcceptPaymentHandlerCc</item>
+      </argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Accept Payment handlers settlement -->
+  <virtualType name="BellunoAcceptPaymentHandlerSettlementCc" type="Magento\Payment\Gateway\Response\HandlerChain">
+    <arguments>
+      <argument name="handlers" xsi:type="array">
+        <item name="accept" xsi:type="string">Belluno\Magento2\Gateway\Response\AcceptPaymentHandlerSettlementCc</item>
+      </argument>
+    </arguments>
+  </virtualType>
+
+  <!-- BANK SLIP -->
+  <!-- Payment Method Facade configuration -->
+  <virtualType name="BellunoMagento2FacadeBankSlip" type="Magento\Payment\Model\Method\Adapter">
+    <arguments>
+      <argument name="code" xsi:type="const">Belluno\Magento2\Model\Ui\BankSlip\ConfigProvider::CODE</argument>
+      <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+      <argument name="infoBlockType" xsi:type="string">Magento\Payment\Block\Info</argument>
+      <argument name="valueHandlerPool" xsi:type="object">BellunoMagento2ValueHandlerPoolBankSlip</argument>
+      <argument name="commandPool" xsi:type="object">BellunoMagento2CommandPoolBankSlip</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Value handlers infrastructure -->
+  <virtualType name="BellunoMagento2ValueHandlerPoolBankSlip" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+    <arguments>
+      <argument name="handlers" xsi:type="array">
+        <item name="default" xsi:type="string">BellunoMagento2ValueHandlerBankSlip</item>
+      </argument>
+    </arguments>
+  </virtualType>
+  <virtualType name="BellunoMagento2ValueHandlerBankSlip" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+    <arguments>
+      <argument name="configInterface" xsi:type="object">BellunoMagento2ConfigBankSlip</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Configuration reader -->
+  <virtualType name="BellunoMagento2ConfigBankSlip" type="Magento\Payment\Gateway\Config\Config">
+    <arguments>
+      <argument name="methodCode" xsi:type="const">Belluno\Magento2\Model\Ui\BankSlip\ConfigProvider::CODE</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Commands infrastructure cc -->
+  <virtualType name="BellunoMagento2CommandPoolBankSlip" type="Magento\Payment\Gateway\Command\CommandPool">
+    <arguments>
+      <argument name="commands" xsi:type="array">
+        <item name="authorize" xsi:type="string">BellunoAuthorizeCommandBankSlip</item>
+      </argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Authorize command -->
+  <virtualType name="BellunoAuthorizeCommandBankSlip" type="Magento\Payment\Gateway\Command\GatewayCommand">
+    <arguments>
+      <argument name="requestBuilder" xsi:type="object">BellunoAuthorizationRequestBankSlip</argument>
+      <argument name="transferFactory" xsi:type="object">Belluno\Magento2\Gateway\Http\TransferFactory</argument>
+      <argument name="client" xsi:type="object">Belluno\Magento2\Gateway\Http\Client\AuthorizeClientBankSlip</argument>
+      <argument name="handler" xsi:type="object">BellunoAcceptPaymentResponseHandlerCompositeBankSlip</argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Authorization Request -->
+  <virtualType name="BellunoAuthorizationRequestBankSlip" type="Magento\Payment\Gateway\Request\BuilderComposite">
+    <arguments>
+      <argument name="builders" xsi:type="array">
+        <item name="bank_slip_data" xsi:type="string">Belluno\Magento2\Gateway\Request\BankSlipDataRequest</item>
+        <item name="billing" xsi:type="string">Belluno\Magento2\Gateway\Request\BankSlipBillingRequest</item>
+        <item name="cart" xsi:type="string">Belluno\Magento2\Gateway\Request\BankSlipCartRequest</item>
+        <item name="postback" xsi:type="string">Belluno\Magento2\Gateway\Request\BankSlipPostbackRequest</item>
+      </argument>
+    </arguments>
+  </virtualType>
+
+  <!-- Accept Payment handlers -->
+  <virtualType name="BellunoAcceptPaymentResponseHandlerCompositeBankSlip" type="Magento\Payment\Gateway\Response\HandlerChain">
+    <arguments>
+      <argument name="handlers" xsi:type="array">
+        <item name="accept" xsi:type="string">Belluno\Magento2\Gateway\Response\AcceptPaymentHandlerBankSlip</item>
+      </argument>
+    </arguments>
+  </virtualType>
+</config>

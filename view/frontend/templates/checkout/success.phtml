@@ -1,0 +1,46 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php /** @var \Belluno\Magento2\Block\Checkout\Success $block*/ ?>
+<?php
+$order = $block->getOrder();
+$payment = $order->getPayment();
+?>
+
+<?php if ($payment->getMethod() === 'bellunopayment') : ?>
+  <!-- credit card -->
+<?php endif ?>
+
+<?php
+if ($payment->getMethod() === 'bellunobankslip') :
+  $digitable_line = $block->getBankSlipDigitableLine();
+  $bankSlip = $block->getBankSlip();
+?>
+  <div class="actions-toolbar flex">
+    <div class="linhes">
+      <h3><?= __("Digitable Line") ?>:</h3>
+      <div class="flex">
+        <textarea readonly rows="1" name="pixer" id="select-this"> <?= $digitable_line ?> </textarea>
+        <div class="actions-toolbar line-digitable">
+          <div class="primary">
+            <button id='clickMe'><?= __("Copy") ?></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="view-bankslip">
+    <iframe src="<?= $bankSlip ?>" width="100%" height="500px">
+    </iframe>
+  </div>
+  <br>
+  <div class="primary">
+    <a target="_blank" class="action primary continue" href="<?php echo $bankSlip; ?>"><span><?php echo __('View Bank Slip') ?></span></a>
+  </div>
+  <br>
+<?php endif ?>

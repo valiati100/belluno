@@ -1,0 +1,22 @@
+{
+  "name": "belluno/module-magento",
+  "description": "Belluno Payments Integration Module",
+  "type": "magento2-module",
+  "license": "OSL-3.0",
+  "authors": [
+      {
+          "email": "tezus@tezus.com.br",
+          "name": "Tezus"
+      }
+  ],
+  "minimum-stability": "dev",
+  "require": {},
+  "autoload": {
+      "files": [
+          "registration.php"
+      ],
+      "psr-4": {
+          "Belluno\\Magento2\\": ""
+      }
+  }
+}

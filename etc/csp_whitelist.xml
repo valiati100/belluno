@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+  <policies>
+    <policy id="script-src">
+      <values>
+        <value id="sandbox-belluno" type="host">https://ws-sandbox.bellunopag.com.br</value>
+        <value id="production-belluno" type="host">https://api.belluno.digital</value>
+        <value id="konduto-belluno" type="host">https://i.k-analytix.com</value>
+        <value id="konduto-belluno2" type="host">https://i.konduto.com</value>
+      </values>
+    </policy>
+  </policies>
+</csp_whitelist>

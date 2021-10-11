@@ -1,0 +1,61 @@
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+  <div class="payment-method-title field choice">
+    <input type="radio" name="payment[method]" class="radio"
+      data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
+    <label data-bind="attr: {'for': getCode()}" class="label">
+      <span data-bind="text: getTitle()"></span>
+    </label>
+  </div>
+  <div class="payment-method-content">
+
+    <!-- CLIENT -->
+    <!-- ko if: getTaxDocument() -->
+    <form class="form" id="belluno-form">
+      <fieldset>
+        <label data-bind="attr: {for: getCode() + '_client_document'}" class="label">
+          <span>
+            <!-- ko i18n: 'Client Document'-->
+            <!-- /ko -->
+          </span>
+        </label>
+        <input type="text" name="payment[client_document]" class="input-text" value="" data-bind="attr: {id: getCode() + '_client_document', 'data-validate': JSON.stringify({'required':true})}, 
+                value: clientDocument, 
+                valueUpdate: 'keyup', 
+                enable: isActive($parents)">
+        </input>
+      </fieldset>
+    </form>
+    <!-- /ko -->
+    
+    <br>
+    <!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() -->
+    <!-- /ko -->
+    <!--/ko-->
+    <div class="payment-method-billing-address">
+      <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+      <!-- ko template: getTemplate() -->
+      <!-- /ko -->
+      <!--/ko-->
+    </div>
+
+    <div class="checkout-agreements-block">
+      <!-- ko foreach: $parent.getRegion('before-place-order') -->
+      <!-- ko template: getTemplate() -->
+      <!-- /ko -->
+      <!--/ko-->
+    </div>
+    <div class="actions-toolbar" id="review-buttons-container">
+      <div class="primary">
+        <button class="action primary checkout" type="submit" data-bind="
+                      click: placeOrder,
+                      attr: {title: $t('Place Order')},
+                      enable: (getCode() == isChecked()),
+                      css: {disabled: !isPlaceOrderActionAllowed()}
+                      " data-role="review-save">
+          <span data-bind="i18n: 'Place Order'"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

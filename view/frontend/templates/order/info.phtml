@@ -1,0 +1,30 @@
+<?php
+
+/** @var \Belluno\Magento2\Block\Order\Info $block */
+
+$paymentInfo = $block->getPaymentInfo();
+if ($block->getPaymentMethod() === 'bellunobankslip') : ?>
+
+  <button type="button" class="action primary btn-paghiper-pix" data-trigger="trigger">
+    <span data-bind="i18n: '<?= $paymentInfo['text'] ?>'"></span>
+  </button>
+  <div data-bind="mageInit: {
+        'Magento_Ui/js/modal/modal':{
+            'type': 'popup',
+            'modalClass': 'modalpix',
+            'title': 'Bank Slip',
+            'trigger': '[data-trigger=trigger]',
+            'responsive': true,
+        }}">
+    <div class="content">
+      <input class="action primary btn-paghiper-boleto" type="button" id="paghiper" onclick="window.open('<?php echo $paymentInfo['url'] ?>');" value="<?= __("Download your ticket here") ?>" />
+    </div>
+    <h3><?= __("Digitable Line") ?>:</h3>
+    <textarea readonly rows="1" name="pixer" id="select-this"><?= $paymentInfo['digitable_line'] ?></textarea>
+    <div class="actions-toolbar">
+      <div class="primary">
+        <button id='clickMe'><?= __("Copy") ?></button>
+      </div>
+    </div>
+  </div>
+<?php endif; ?>
