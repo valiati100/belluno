@@ -1,5 +1,5 @@
 {
-  "name": "belluno/module-magento",
+  "name": "belluno-finance-solutions/module-magento",
   "description": "Belluno Payments Integration Module",
   "version": "1.0.1",
   "type": "magento2-module",
