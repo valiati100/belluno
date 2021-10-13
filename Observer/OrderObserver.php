@@ -8,6 +8,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Sales\Model\Order;
 use Belluno\Magento2\Gateway\Config\ConfigCc;
+use Belluno\Magento2\Gateway\Config\ConfigBankSlip;
 
 class OrderObserver implements ObserverInterface
 {
@@ -26,7 +27,7 @@ class OrderObserver implements ObserverInterface
         $order->setState('pending')->setStatus('pending');
         $order->save();
       }
-    } else {
+    } else if ($payment->getMethod() == ConfigBankSlip::METHOD) {
       $status = $additionalInformation['bankslip']['status'];
       if ($status != 'Paid') {
         $order->setState('pending')->setStatus('pending');
@@ -35,3 +36,4 @@ class OrderObserver implements ObserverInterface
     }
   }
 }
+
