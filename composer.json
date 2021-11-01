@@ -1,7 +1,7 @@
 {
   "name": "belluno-finance-solutions/module-magento",
   "description": "Belluno Payments Integration Module",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "magento2-module",
   "license": "OSL-3.0",
   "authors": [
