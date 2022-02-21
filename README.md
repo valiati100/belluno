@@ -27,7 +27,7 @@ Download the module and follow the steps below:
 1. Install via packagist:
 
    ```
-   composer require belluno/module-magento
+   composer require belluno-finance-solutions/module-magento
    ```
 
    At this time, you may be asked for your Magento authentication credentials. If in doubt, there is documentation that will help you. [Link](https://devdocs.magento.com/guides/v2.3/install-gde/prereq/connect-auth.html)
