@@ -13,78 +13,81 @@ use Magento\Sales\Model\Order;
 /**
  * Class SubjectReader - Reading data.
  */
-class SubjectReader {
+class SubjectReader
+{
+    /** @var Checkout Session */
+    private $checkoutSession;
 
-  /** @var Checkout Session */
-  private $checkoutSession;
-
-  /**
-   * SubjectReader constructor.
-   * @param Session $checkoutSession
-   */
-  public function __construct(Session $checkoutSession) {
-    $this->checkoutSession = $checkoutSession;
-  }
-
-  /**
-   * Reads payment from subject.
-   * @param array $subject
-   * @return PaymentDataObjectInterface
-   */
-  public function readPayment(array $subject): PaymentDataObjectInterface {
-    return Helper\SubjectReader::readPayment($subject);
-  }
-
-  /**
-   * Reads store's ID, otherwise returns null.
-   * @param array $subject
-   * @return int|null
-   */
-  public function readStoreId(array $subject): int {
-    $storeId = $subject['store_id'] ?? null;
-
-    if (empty($storeId)) {
-      try {
-        $storeId = (int) $this->readPayment($subject)
-          ->getOrder()
-          ->getStoreId();
-      } catch (\InvalidArgumentException $e) {
-        // No store id is current set
-      }
+    /**
+     * SubjectReader constructor.
+     * @param Session $checkoutSession
+     */
+    public function __construct(Session $checkoutSession)
+    {
+        $this->checkoutSession = $checkoutSession;
     }
 
-    return $storeId ? (int) $storeId : null;
-  }
+    /**
+     * Reads payment from subject.
+     * @param array $subject
+     * @return PaymentDataObjectInterface
+     */
+    public function readPayment(array $subject): PaymentDataObjectInterface
+    {
+        return Helper\SubjectReader::readPayment($subject);
+    }
 
-  /**
-   * Reads amount from subject.
-   * @param array $subject
-   * @return string
-   */
-  public function readAmount(array $subject): string {
-    return (string) Helper\SubjectReader::readAmount($subject);
-  }
+    /**
+     * Reads store's ID, otherwise returns null.
+     * @param array $subject
+     * @return int|null
+     */
+    public function readStoreId(array $subject): int
+    {
+        $storeId = $subject["store_id"] ?? null;
+        if(empty($storeId)) {
+            try {
+                $storeId = (int)$this->readPayment($subject)->getOrder()->getStoreId();
+            } catch (\InvalidArgumentException $e) {
+                // No store id is current set
+            }
+        }
+        return $storeId ? (int) $storeId : null;
+    }
 
-  /**
-   * Reads response from subject.
-   * @param array $subject
-   * @return array
-   */
-  public function readResponse(array $subject): array {
-    return Helper\SubjectReader::readResponse($subject);
-  }
+    /**
+     * Reads amount from subject.
+     * @param array $subject
+     * @return string
+     */
+    public function readAmount(array $subject): string
+    {
+        return (string)Helper\SubjectReader::readAmount($subject);
+    }
 
-  /**
-   * @return Quote
-   */
-  public function getQuote() {
-    return $this->checkoutSession->getQuote();
-  }
+    /**
+     * Reads response from subject.
+     * @param array $subject
+     * @return array
+     */
+    public function readResponse(array $subject): array
+    {
+        return Helper\SubjectReader::readResponse($subject);
+    }
 
-  /**
-   * @return Order
-   */
-  public function getOrder() {
-    return $this->checkoutSession->getLastRealOrder();
-  }
+    /**
+     * @return Quote
+     */
+    public function getQuote()
+    {
+        return $this->checkoutSession->getQuote();
+    }
+
+    /**
+     * @return Order
+     */
+    public function getOrder()
+    {
+        return $this->checkoutSession->getLastRealOrder();
+    }
 }

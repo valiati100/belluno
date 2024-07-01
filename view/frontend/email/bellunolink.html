@@ -1,0 +1,7 @@
+<!--@subject {{trans "Payment link"}} @-->
+
+{{template config_path="design/email/header_template"}}
+
+{{trans "Hello %customer_name, here is your payment link: %payment_link" customer_name=$data.customer_name payment_link=$data.payment_link|raw}}
+
+{{template config_path="design/email/footer_template"}}

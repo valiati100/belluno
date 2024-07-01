@@ -9,41 +9,38 @@ use Magento\Payment\Gateway\Http\TransferInterface;
 use Belluno\Magento2\Helper\Helper;
 use Magento\Quote\Api\Data\CartInterface;
 
-class SettlementClientCc implements ClientInterface {
+class SettlementClientCc implements ClientInterface
+{
+    /** @var Helper */
+    private $_helper;
 
-  /** @var Helper */
-  private $_helper;
+    /** @var CartInterface */
+    private $_cart;
 
-  /** @var CartInterface */
-  private $_cart;
+    public function __construct(Helper $helper, CartInterface $cart)
+    {
+        $this->_helper = $helper;
+        $this->_cart = $cart;
+    }
 
-  public function __construct(
-    Helper $helper,
-    CartInterface $cart
-  ) {
-    $this->_helper = $helper;
-    $this->_cart = $cart;
-  }
+    public function placeRequest(TransferInterface $transferObject)
+    {
+        $request = $transferObject->getBody();
 
-  public function placeRequest(TransferInterface $transferObject) {
+        $id = $request["id"];
+        $data = $request["request"];
+        $data = json_encode($data);
 
-    $request = $transferObject->getBody();
+        $params = [
+            "data" => $data,
+            "method" => "post",
+            "host" => "",
+        ];
+        $function = "/transaction" . "/" . $id . "/result";
 
-    $id = $request['id'];
-    $data = $request['request'];
-    $data = json_encode($data);
+        $response = $this->_helper->getBellunoService($this->_cart->getStoreId())->doRequest($function, $params);
+		$response = json_decode($response, true);
 
-    $params = [
-      'data' => $data,
-      'method' => 'post',
-      'host' => ''
-    ];
-    $function = '/transaction' . '/' . $id . '/result';
-
-    $response = $this->_helper->getBellunoService($this->_cart->getStoreId())->doRequest($function, $params);
-
-    $response = json_decode($response, true);
-
-    return $response;
-  }
+        return $response;
+    }
 }

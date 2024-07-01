@@ -1,90 +1,151 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
-  <system>
-    <section id="payment">
-      <group id="belluno_config" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label><![CDATA[Belluno Custom Payment]]></label>
-        <group id="belluno_config" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Belluno Config</label>
-          <field id="environment" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label><![CDATA[Environment]]></label>
-            <source_model>Belluno\Magento2\Block\Adminhtml\Form\Field\Environment</source_model>
-            <validate>required-entry validate-select</validate>
-          </field>
-          <field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
-            <label><![CDATA[Sort Order]]></label>
-            <frontend_class>validate-number integer</frontend_class>
-          </field>
-        </group>
-        <group id="belluno_auth" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Belluno - Authentication</label>
-          <field id="authentication" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Authentication Token</label>
-            <validate>required-entry</validate>
-          </field>
-          <field id="pub_key_konduto" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Public Key Konduto</label>
-            <validate>required-entry</validate>
-            <comment>This field must be made available by the Konduto support team.</comment>
-          </field>
-        </group>
-        <group id="bellunopayment" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Belluno - Credit Card</label>
-          <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-            <label><![CDATA[Enabled]]></label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/bellunopayment/active</config_path>
-          </field>
-          <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label><![CDATA[Title]]></label>
-            <validate>required-entry</validate>
-            <config_path>payment/bellunopayment/title</config_path>
-          </field>
-          <field id="payment_action" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Rule of Capture</label>
-            <source_model>Belluno\Magento2\Block\Adminhtml\Form\Field\RuleCapture</source_model>
-            <config_path>payment/bellunopayment/payment_action</config_path>
-          </field>
-          <field id="min_installment" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Minimum value of installment</label>
-            <validate>required-entry validate-number</validate>
-            <config_path>payment/bellunopayment/min_installment</config_path>
-          </field>
-          <field id="installments" translate="label" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Installments</label>
-            <frontend_model>Belluno\Magento2\Block\Adminhtml\Form\Field\Installments</frontend_model>
-            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
-            <validate>required-entry</validate>
-          </field>
-          <field id="tax_document" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Capture tax document (CPF or CNPJ) in the payment form?</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          </field> 
-        </group>
-        <group id="bellunobankslip" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-          <label>Belluno - Bank Slip</label>
-          <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-            <label><![CDATA[Enabled]]></label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/bellunobankslip/active</config_path>
-          </field>
-          <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label><![CDATA[Title]]></label>
-            <validate>required-entry</validate>
-            <config_path>payment/bellunobankslip/title</config_path>
-          </field>
-          <field id="expiration_days" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Days to expiration</label>
-            <validate>required-entry validate-number integer</validate>
-            <comment>If not filled in, one day will be taken into account.</comment>
-            <config_path>payment/bellunobankslip/expiration_days</config_path>
-          </field>
-          <field id="tax_document" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
-            <label>Capture tax document (CPF or CNPJ) in the payment form?</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-          </field>
-        </group>
-      </group>
-    </section>
-  </system>
+	<system>
+		<section id="payment">
+			<group id="belluno_config" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label><![CDATA[Belluno Custom Payment]]></label>
+				<group id="belluno_config" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Belluno Config</label>
+					<field id="environment" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label><![CDATA[Environment]]></label>
+						<source_model>Belluno\Magento2\Block\Adminhtml\Form\Field\Environment</source_model>
+						<validate>required-entry validate-select</validate>
+					</field>
+				</group>
+				<group id="belluno_auth" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Belluno - Authentication</label>
+					<field id="authentication" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Authentication Token</label>
+						<validate>required-entry</validate>
+					</field>
+					<field id="pub_key_konduto" translate="label" type="text" sortOrder="8" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Public Key Konduto</label>
+						<validate>required-entry</validate>
+						<comment>This field must be made available by the Konduto support team.</comment>
+					</field>
+				</group>
+				<group id="bellunopayment" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Belluno - Credit Card</label>
+					<field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+						<label><![CDATA[Enabled]]></label>
+						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+						<config_path>payment/bellunopayment/active</config_path>
+					</field>
+					<field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label><![CDATA[Title]]></label>
+						<validate>required-entry</validate>
+						<config_path>payment/bellunopayment/title</config_path>
+					</field>
+					<field id="payment_action" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Rule of Capture</label>
+						<source_model>Belluno\Magento2\Block\Adminhtml\Form\Field\RuleCapture</source_model>
+						<config_path>payment/bellunopayment/payment_action</config_path>
+					</field>
+					<field id="min_installment" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Minimum value of installment</label>
+						<validate>required-entry validate-number</validate>
+						<config_path>payment/bellunopayment/min_installment</config_path>
+					</field>
+					<field id="installments" translate="label" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Installments</label>
+						<frontend_model>Belluno\Magento2\Block\Adminhtml\Form\Field\Installments</frontend_model>
+						<backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+						<validate>required-entry</validate>
+					</field>
+					<field id="tax_document" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Capture tax document (CPF or CNPJ) in the payment form?</label>
+						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					</field>
+					<field id="sort_order" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+						<label>Sort Order</label>
+						<config_path>payment/bellunopayment/sort_order</config_path>
+						<frontend_class>validate-number</frontend_class>
+					</field>
+				</group>
+				<group id="bellunobankslip" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Belluno - Bank Slip</label>
+					<field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+						<label><![CDATA[Enabled]]></label>
+						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+						<config_path>payment/bellunobankslip/active</config_path>
+					</field>
+					<field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label><![CDATA[Title]]></label>
+						<validate>required-entry</validate>
+						<config_path>payment/bellunobankslip/title</config_path>
+					</field>
+					<field id="expiration_days" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Days to expiration</label>
+						<validate>required-entry validate-number integer</validate>
+						<comment>If not filled in, one day will be taken into account.</comment>
+						<config_path>payment/bellunobankslip/expiration_days</config_path>
+					</field>
+					<field id="tax_document" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Capture tax document (CPF or CNPJ) in the payment form?</label>
+						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					</field>
+					<field id="sort_order" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+						<label>Sort Order</label>
+						<config_path>payment/bellunobankslip/sort_order</config_path>
+						<frontend_class>validate-number</frontend_class>
+					</field>
+				</group>
+				<group id="bellunopix" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Belluno - Pix</label>
+					<field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+						<label><![CDATA[Enabled]]></label>
+						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+						<config_path>payment/bellunopix/active</config_path>
+					</field>
+					<field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label><![CDATA[Title]]></label>
+						<validate>required-entry</validate>
+						<config_path>payment/bellunopix/title</config_path>
+					</field>
+					<field id="expiration_days" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Days to expiration</label>
+						<validate>required-entry validate-number integer</validate>
+						<comment>If not filled in, one day will be taken into account.</comment>
+						<config_path>payment/bellunopix/expiration_days</config_path>
+					</field>
+					<field id="tax_document" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label>Capture tax document (CPF or CNPJ) in the payment form?</label>
+						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					</field>
+					<field id="sort_order" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+						<label>Sort Order</label>
+						<config_path>payment/bellunopix/sort_order</config_path>
+						<frontend_class>validate-number</frontend_class>
+					</field>
+				</group>
+				<group id="bellunolink" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+					<label>Belluno - Payment link</label>
+					<field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+						<label><![CDATA[Enabled]]></label>
+						<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+						<config_path>payment/bellunolink/active</config_path>
+					</field>
+					<field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+						<label><![CDATA[Title]]></label>
+						<validate>required-entry</validate>
+						<config_path>payment/bellunolink/title</config_path>
+					</field>
+					<field id="emailtemplate" translate="label" type="select" sortOrder="20" showInDefault="1" showInStore="1" showInWebsite="1">
+						<label><![CDATA[Email Template]]></label>     
+						<source_model>Belluno\Magento2\Model\Config\Source\EmailTemplate</source_model>
+						<config_path>payment/bellunolink/emailtemplate</config_path>
+						<comment>E-mail sent after generating the payment link.</comment>
+						<depends>
+							<field id="active">1</field>
+						</depends>
+					</field>
+					<field id="sort_order" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+						<label>Sort Order</label>
+						<config_path>payment/bellunolink/sort_order</config_path>
+						<frontend_class>validate-number</frontend_class>
+					</field>
+				</group>
+			</group>
+		</section>
+	</system>
 </config>

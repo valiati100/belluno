@@ -9,38 +9,35 @@ use Magento\Payment\Gateway\Http\TransferInterface;
 use Belluno\Magento2\Helper\Helper;
 use Magento\Quote\Api\Data\CartInterface;
 
-class AuthorizeClientBankSlip implements ClientInterface {
+class AuthorizeClientBankSlip implements ClientInterface
+{
+    /** @var Helper */
+    private $_helper;
 
-  /** @var Helper */
-  private $_helper;
+    /** @var CartInterface */
+    private $_cart;
 
-  /** @var CartInterface */
-  private $_cart;
+    public function __construct(Helper $helper, CartInterface $cart)
+    {
+        $this->_helper = $helper;
+        $this->_cart = $cart;
+    }
 
-  public function __construct(
-    Helper $helper,
-    CartInterface $cart
-  ) {
-    $this->_helper = $helper;
-    $this->_cart = $cart;
-  }
+    public function placeRequest(TransferInterface $transferObject)
+    {
+        $request = $transferObject->getBody();
+        $request = json_encode($request);
 
-  public function placeRequest(TransferInterface $transferObject) {
+        $params = [
+            "data" => $request,
+            "method" => "post",
+            "host" => "",
+        ];
+        $function = "/bankslip";
 
-    $request = $transferObject->getBody();
-    $request = json_encode($request);
+        $response = $this->_helper->getBellunoService($this->_cart->getStoreId())->doRequest($function, $params);
+        $response = json_decode($response, true);
 
-    $params = [
-      'data' => $request,
-      'method' => 'post',
-      'host' => ''
-    ];
-    $function = '/bankslip';
-
-    $response = $this->_helper->getBellunoService($this->_cart->getStoreId())->doRequest($function, $params);
-
-    $response = json_decode($response, true);
-
-    return $response;
-  }
+        return $response;
+    }
 }

@@ -1,221 +1,218 @@
 <div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
-  <div class="payment-method-title field choice">
-    <input type="radio" name="payment[method]" class="radio"
-      data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
-    <label data-bind="attr: {'for': getCode()}" class="label">
-      <span data-bind="text: getTitle()"></span>
-    </label>
-  </div>
-  <div class="payment-method-content">
+	<div class="payment-method-title field choice">
+		<input type="radio" name="payment[method]" class="radio"
+			data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
+		<label data-bind="attr: {'for': getCode()}" class="label">
+			<span data-bind="text: getTitle()"></span>
+		</label>
+	</div>
+	<div class="payment-method-content">
 
-    <!-- CREDIT CARD -->
-    <form class="form" id="bellunocc-form">
+		<!-- CREDIT CARD -->
+		<form class="form" id="bellunocc-form">
+			<fieldset>
+				<!-- ICONS -->
+				<span class="legend-icon">
+					<ul class="credit-card-types">
+						<!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
+							<li class="item" data-bind="css: {
+								_active: $parent.selectedCardType() == item.value,
+								_hidden: $parent.selectedCardType() != item.value
+								} ">
+								<!-- ko if: $parent.getIcons(item.value) -->
+								<img data-bind="attr: {
+									'src': $parent.getIcons(item.value).url,
+									'alt': item.type,
+									'width': $parent.getIcons(item.value).width,
+									'height': $parent.getIcons(item.value).height
+								}">
+								<!--/ko-->
+							</li>
+						<!--/ko-->
+					</ul>
+				</span>
 
-      <fieldset>
-        <!-- ICONS -->
-        <span class="legend-icon">
-          <ul class="credit-card-types">
-            <!-- ko foreach: {data: getCcAvailableTypesValues(), as: 'item'} -->
-            <li class="item" data-bind="css: {
-                                    _active: $parent.selectedCardType() == item.value,
-                                    _hidden: $parent.selectedCardType() != item.value
-                                    } ">
-              <!-- ko if: $parent.getIcons(item.value) -->
-              <img data-bind="attr: {
-                'src': $parent.getIcons(item.value).url,
-                'alt': item.type,
-                'width': $parent.getIcons(item.value).width,
-                'height': $parent.getIcons(item.value).height
-                }">
-              <!--/ko-->
-            </li>
-            <!--/ko-->
-          </ul>
-        </span>
-
-        <input type="hidden" name="payment[cc_type]" class="input-text" value="" data-bind="attr: {id: getCode() + '_cc_type', 'data-container': getCode() + '-cc-type'},
-          value: creditCardType
-        ">
+				<input type="hidden" name="payment[cc_type]" class="input-text" value="" data-bind="attr: {id: getCode() + '_cc_type', 'data-container': getCode() + '-cc-type'},
+					value: creditCardType">
 
 
-        <label data-bind="attr: {for: getCode() + '_card_number'}" class="label">
-          <span>
-            <!-- ko i18n: 'Card Number'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <input required type="text" name="payment[card_number]" class="name" data-bind="
+				<label data-bind="attr: {for: getCode() + '_card_number'}" class="label">
+					<span>
+						<!-- ko i18n: 'Card Number'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<input required type="text" name="payment[card_number]" class="name" data-bind="
                 attr: {id: getCode() + '_card_number', 
                 'data-container': getCode() + '-card-number',
                 'data-validate': JSON.stringify({'required-number':true, 
-                                                'validate-card-number-belluno':'#' + getCode() + '_card_number',
-                                                'validate-card-type-belluno':getCcAvailableTypesValues(),
-                                                'validate-cc-type-belluno':'#' + getCode() + '_cc_type'
-                                                })}, 
+											'validate-card-number-belluno':'#' + getCode() + '_card_number',
+											'validate-cc-type-belluno':'#' + getCode() + '_cc_type'
+											})}, 
                 value: creditCardNumber,
                 valueUpdate: 'keyup',
                 enable: isActive($parents)">
-        </input>
+				</input>
 
-        <label data-bind="attr: {for: getCode() + '_expiration_mth'}" class="label">
-          <span>
-            <!-- ko i18n: 'Expiration Month'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <select name="payment[cc_exp_month]" class="select select-month" data-bind="attr: {'data-validate': JSON.stringify({'required':true})},
-              enable: isActive($parents),
-              options: getCcMonthsValues(),
-              optionsValue: 'value',
-              optionsText: 'month',
-              optionsCaption: $t('Month'),
-              value: ccExpMonth,
-              valueUpdate: 'keyup' ">
-        </select>
+				<label data-bind="attr: {for: getCode() + '_expiration_mth'}" class="label">
+					<span>
+						<!-- ko i18n: 'Expiration Month'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<select name="payment[cc_exp_month]" class="select select-month" data-bind="attr: {'data-validate': JSON.stringify({'required':true})},
+				  enable: isActive($parents),
+				  options: getCcMonthsValues(),
+				  optionsValue: 'value',
+				  optionsText: 'month',
+				  optionsCaption: $t('Month'),
+				  value: ccExpMonth,
+				  valueUpdate: 'keyup' ">
+				</select>
 
-        <label data-bind="attr: {for: getCode() + '_expiration_yr'}" class="label">
-          <span>
-            <!-- ko i18n: 'Expiration Year'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <select name="payment[cc_exp_year]" class="select select-year" data-bind="attr: {'data-validate': JSON.stringify({'required':true})},
-              enable: isActive($parents),
-              options: getCcYearsValues(),
-              optionsValue: 'value',
-              optionsText: 'year',
-              optionsCaption: $t('Year'),
-              value: ccExpYear,
-              valueUpdate: 'keyup' ">
-        </select>
+				<label data-bind="attr: {for: getCode() + '_expiration_yr'}" class="label">
+					<span>
+						<!-- ko i18n: 'Expiration Year'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<select name="payment[cc_exp_year]" class="select select-year" data-bind="attr: {'data-validate': JSON.stringify({'required':true})},
+					  enable: isActive($parents),
+					  options: getCcYearsValues(),
+					  optionsValue: 'value',
+					  optionsText: 'year',
+					  optionsCaption: $t('Year'),
+					  value: ccExpYear,
+					  valueUpdate: 'keyup' ">
+				</select>
 
-        <label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
-          <span>
-            <!-- ko i18n: 'CVV - Card Verification Number'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <input type="number" class="input-text cvv" name="payment[cc_cvv]" value="" data-bind="attr: {'data-validate': JSON.stringify({'required':true, 
-                                                                                                    'validate-card-cvv-belluno':'#' + getCode() + '_cc_type'
-                                                                                                    })},
-            enable: isActive($parents),
-            value: ccCvv,
-            valueUpdate: 'keyup' " />
+				<label data-bind="attr: {for: getCode() + '_cc_cid'}" class="label">
+					<span>
+						<!-- ko i18n: 'CVV - Card Verification Number'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<input type="number" class="input-text cvv" name="payment[cc_cvv]" value="" 
+					data-bind="attr: {'data-validate': JSON.stringify({'required':true, 
+					'validate-card-cvv-belluno':'#' + getCode() + '_cc_type'
+					})},
+					enable: isActive($parents),
+					value: ccCvv,
+					valueUpdate: 'keyup' " />
 
-        <label data-bind="attr: {for: getCode() + '_name_card'}" class="label">
-          <span>
-            <!-- ko i18n: 'Name On Card'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <input type="text" name="payment[card_name]" class="name" data-bind="attr: {'data-validate': JSON.stringify({'required':true})}, 
+				<label data-bind="attr: {for: getCode() + '_name_card'}" class="label">
+					<span>
+						<!-- ko i18n: 'Name On Card'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<input type="text" name="payment[card_name]" class="name" data-bind="attr: {'data-validate': JSON.stringify({'required':true})}, 
                     value: cardName, 
                     valueUpdate: 'keyup', 
                     enable: isActive($parents)">
-        </input>
+				</input>
 
-        <label data-bind="attr: {for: getCode() + '_card_holder_document'}" class="label">
-          <span>
-            <!-- ko i18n: 'Card Holder Document'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <input type="text" name="payment[cardholder_document]" class="name" data-bind="attr: {id: getCode() + '_cardholder_document', 'data-validate': JSON.stringify({'required':true})}, 
-                value: cardHolderDocument, 
-                valueUpdate: 'keyup', 
-                enable: isActive($parents)">
-        </input>
+				<label data-bind="attr: {for: getCode() + '_card_holder_document'}" class="label">
+					<span>
+						<!-- ko i18n: 'Card Holder Document'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<input type="text" name="payment[cardholder_document]" placeholder="000.000.000-00" class="name" data-bind="attr: {id: getCode() + '_cardholder_document', 'data-validate': JSON.stringify({'required':true})}, 
+					value: cardHolderDocument, 
+					valueUpdate: 'keyup', 
+					enable: isActive($parents)">
+				</input>
 
-        <label data-bind="attr: {for: getCode() + '_card_holder_birth'}" class="label">
-          <span>
-            <!-- ko i18n: 'Card Holder Birth'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <input type="text" name="payment[cardholder_birth]" class="name" data-bind="attr: {id: getCode() + '_cardholder_birth', 'data-validate': JSON.stringify({'required':true})}, 
-            value: cardHolderBirth, 
-            valueUpdate: 'keyup', 
-            enable: isActive($parents)">
-        </input>
+				<label data-bind="attr: {for: getCode() + '_card_holder_birth'}" class="label">
+					<span>
+						<!-- ko i18n: 'Card Holder Birth'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<input type="text" name="payment[cardholder_birth]" placeholder="dd/mm/yyyy" class="name" data-bind="attr: {id: getCode() + '_cardholder_birth', 'data-validate': JSON.stringify({'required':true})}, 
+					value: cardHolderBirth, 
+					valueUpdate: 'keyup', 
+					enable: isActive($parents)">
+				</input>
 
-        <label data-bind="attr: {for: getCode() + '_cardholder_cellphone'}" class="label">
-          <span>
-            <!-- ko i18n: 'Card Holder Cellphone'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <input type="text" name="payment[cardholder_cellphone]" class="name" data-bind="attr: {id: getCode() + '_cardholder_cellphone', 'data-validate': JSON.stringify({'required':true})}, 
-            value: cardHolderCellphone, 
-            valueUpdate: 'keyup', 
-            enable: isActive($parents)">
-        </input>
+				<label data-bind="attr: {for: getCode() + '_cardholder_cellphone'}" class="label">
+					<span>
+						<!-- ko i18n: 'Card Holder Cellphone'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<input type="text" name="payment[cardholder_cellphone]" placeholder="(xx) xxxx-xxxx" class="name" data-bind="attr: {id: getCode() + '_cardholder_cellphone', 'data-validate': JSON.stringify({'required':true})}, 
+					value: cardHolderCellphone, 
+					valueUpdate: 'keyup', 
+					enable: isActive($parents)">
+				</input>
 
-        <label data-bind="attr: {for: getCode() + '_installments'}" class="label">
-          <span>
-            <!-- ko i18n: 'Select Installment' -->
-            <!-- /ko -->
-          </span>
-        </label>
-        <select name="payment[cc_installments]" class="select select-year" data-bind="attr: {'data-validate': JSON.stringify({'required':true})},
-                  enable: isActive($parents),                     
-                  options: getInstallments(),
-                  optionsValue: 'value',
-                  optionsText: 'installments',
-                  optionsCaption: $t('Select Installment'),
-                  value: ccInstallments,
-                  valueUpdate: 'keyup' ">
-        </select>
-      </fieldset>
+				<label data-bind="attr: {for: getCode() + '_installments'}" class="label">
+					<span>
+						<!-- ko i18n: 'Select Installment' -->
+						<!-- /ko -->
+					</span>
+				</label>
+				<select name="payment[cc_installments]" class="select select-year" data-bind="attr: {'data-validate': JSON.stringify({'required':true})},
+					enable: isActive($parents),                     
+					options: getInstallments(),
+					optionsValue: 'value',
+					optionsText: 'installments',
+					optionsCaption: $t('Select Installment'),
+					value: ccInstallments,
+					valueUpdate: 'keyup' ">
+				</select>
+			</fieldset>
 
-      <br>
+			<br>
       
-      <!-- CLIENT -->
-      <!-- ko if: getTaxDocument() -->
-      <fieldset>
-        <label data-bind="attr: {for: getCode() + '_client_document'}" class="label">
-          <span>
-            <!-- ko i18n: 'Client Document'-->
-            <!-- /ko -->
-          </span>
-        </label>
-        <input type="text" name="payment[client_document]" class="input-text" value="" data-bind="attr: {id: getCode() + '_client_document', 'data-validate': JSON.stringify({'required':true})}, 
-                value: clientDocument, 
-                valueUpdate: 'keyup', 
-                enable: isActive($parents)">
-        </input>
-      </fieldset>
-        <!-- /ko -->
+			<!-- CLIENT -->
+			<!-- ko if: getTaxDocument() -->
+			<fieldset>
+				<label data-bind="attr: {for: getCode() + '_client_document'}" class="label">
+					<span>
+						<!-- ko i18n: 'Client Document'-->
+						<!-- /ko -->
+					</span>
+				</label>
+				<input type="text" name="payment[client_document]" placeholder="000.000.000-00" class="input-text" value="" data-bind="attr: {id: getCode() + '_client_document', 'data-validate': JSON.stringify({'required':true})}, 
+					value: clientDocument, 
+					valueUpdate: 'keyup', 
+					enable: isActive($parents)">
+				</input>
+			</fieldset>
+			<!-- /ko -->
 
-    </form>
-    <br>
-    <!-- ko foreach: getRegion('messages') -->
-    <!-- ko template: getTemplate() -->
-    <!-- /ko -->
-    <!--/ko-->
-    <div class="payment-method-billing-address">
-      <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
-      <!-- ko template: getTemplate() -->
-      <!-- /ko -->
-      <!--/ko-->
-    </div>
+		</form>
+		<br>
+		<!-- ko foreach: getRegion('messages') -->
+			<!-- ko template: getTemplate() -->
+			<!-- /ko -->
+		<!--/ko-->
+		<div class="payment-method-billing-address">
+		<!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+			<!-- ko template: getTemplate() -->
+			<!-- /ko -->
+		<!--/ko-->
+		</div>
 
-    <div class="checkout-agreements-block">
-      <!-- ko foreach: $parent.getRegion('before-place-order') -->
-      <!-- ko template: getTemplate() -->
-      <!-- /ko -->
-      <!--/ko-->
-    </div>
-    <div class="actions-toolbar" id="review-buttons-container">
-      <div class="primary">
-        <button class="action primary checkout" type="submit" data-bind="
-                      click: placeOrder,
-                      attr: {title: $t('Place Order')},
-                      enable: (getCode() == isChecked()),
-                      css: {disabled: !isPlaceOrderActionAllowed()}
-                      " data-role="review-save">
-          <span data-bind="i18n: 'Place Order'"></span>
-        </button>
-      </div>
-    </div>
-  </div>
+		<div class="checkout-agreements-block">
+		<!-- ko foreach: $parent.getRegion('before-place-order') -->
+			<!-- ko template: getTemplate() -->
+			<!-- /ko -->
+		<!--/ko-->
+		</div>
+		<div class="actions-toolbar" id="review-buttons-container">
+			<div class="primary">
+				<button class="action primary checkout" type="submit" data-bind="
+                    click: placeOrder,
+                    attr: {title: $t('Place Order')},
+                    enable: (getCode() == isChecked()),
+                    css: {disabled: !isPlaceOrderActionAllowed()}" data-role="review-save">
+					<span data-bind="i18n: 'Place Order'"></span>
+				</button>
+			</div>
+		</div>
+	</div>
 </div>

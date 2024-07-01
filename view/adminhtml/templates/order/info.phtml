@@ -1,35 +1,46 @@
 <?php
-
 /** @var \Belluno\Magento2\Block\Order\Info $block */
 $paymentDetail = __("Payment Detail");
 $paymentInfo = $block->getPaymentInfo();
-if ($block->getPaymentMethod() === 'bellunobankslip') : ?>
-  <button class="action primary btn-belluno-bankslip" type="button" id="belluno" onclick="window.open('<?php echo $paymentInfo['url'] ?>');">
-    <span data-bind="i18n: '<?= $paymentInfo['text'] ?>'"></span>
-  </button>
+if($block->getPaymentMethod() === 'bellunobankslip') : ?>
+	<button class="action primary btn-belluno-bankslip" type="button" id="belluno" onclick="window.open('<?php echo $paymentInfo['url'] ?>');">
+		<span data-bind="i18n: '<?= $paymentInfo['text'] ?>'"></span>
+	</button>
 <?php endif; ?>
+
+<?php if ($block->getPaymentMethod() === 'bellunolink' && $paymentInfo['url'] !== false) : ?>
+	<button class="action primary btn-belluno-bellunolink" type="button" id="belluno" onclick="window.open('<?php echo $paymentInfo['url'] ?>');">
+		<span data-bind="i18n: '<?= $paymentInfo['text'] ?>'"></span>
+	</button>
+<?php endif; ?>
+
 <?php if ($block->getPaymentMethod() === 'bellunopayment') : ?>
-  <button type="button" class="action primary btn-belluno-cc" data-trigger="trigger">
-    <span data-bind="i18n: '<?= $paymentDetail ?>'"></span>
-  </button>
-  <div data-bind="mageInit: {
+	<button type="button" class="action primary btn-belluno-cc" data-trigger="trigger">
+		<span data-bind="i18n: '<?= $paymentDetail ?>'"></span>
+	</button>
+	<div data-bind="mageInit: {
         'Magento_Ui/js/modal/modal':{
             'type': 'popup',
-            'modalClass': 'modalpix',
+            'modalClass': 'modalcc',
             'title': '<?= $paymentDetail ?>',
             'trigger': '[data-trigger=trigger]',
             'responsive': true,
         }}">
-    <div class="content">
-      <?php if (is_array($paymentInfo)) : ?>
-        <?php foreach ($paymentInfo as $title => $info) : ?>
-          <div class="info-wrapper">
-            <span><?= __($title) ?>:</span>
-            <p><?= $info ?></p>
-          </div>
-        <?php endforeach; ?>
-      <?php endif; ?>
-    </div>
-  </div>  
+		<div class="content">
+			<?php if (is_array($paymentInfo)) : ?>
+				<?php foreach ($paymentInfo as $title => $info) : ?>
+					<div class="info-wrapper">
+						<span><?= __($title) ?>:</span>
+						<p><?= $info ?></p>
+					</div>
+				<?php endforeach; ?>
+			<?php endif; ?>
+		</div>
+	</div>  
 <?php endif; ?>
 
+<?php if ($block->getPaymentMethod() === 'bellunopix') : ?>
+    <div class="content">
+		<img src="data:image/png;base64,<?= $paymentInfo['base64_image'] ?>" width="15%" />
+    </div>
+<?php endif; ?>
