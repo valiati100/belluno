@@ -48,7 +48,7 @@ class CancelPaymentLink extends Action
 			if($payment->getAdditionalInformation('bellunolink') != null) {
 				$this->logger->info('############################################################################');
 				$params = [
-					'data' => [],
+					'data' => json_encode([]),
 					'method' => 'post',
 					'host' => ''
 				];

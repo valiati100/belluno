@@ -67,10 +67,11 @@ class Connector
             $method = isset($params["method"]) ? $params["method"] : "post";
             $data = $params["data"];
             $this->getClient()->setMethod($method);
-            $this->getClient()->setRawBody($data);
             $this->getClient()->setUri($params["host"] . $function);
-			$this->logger->info("############################################################");
-			$this->logger->info(json_encode($data));
+			if(null != $data && count(json_decode($data, true)) > 0) {
+				$this->getClient()->setRawBody($data);
+				$this->logger->info(json_encode($data));
+			}
             $response = $this->getClient()->send();
 
             if($params["method"] == "get" && strpos($params["host"] . $function, "card_hash_key") === false) {

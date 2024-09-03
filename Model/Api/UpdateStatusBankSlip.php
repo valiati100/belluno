@@ -9,6 +9,8 @@ use Magento\Sales\Model\OrderFactory;
 use Belluno\Magento2\Block\Invoice\Invoice;
 use Magento\Framework\Webapi\Rest\Request;
 use Belluno\Magento2\Helper\Helper;
+use Belluno\Magento2\Helper\Order as OrderHelper;
+use Belluno\Magento2\Gateway\Config\ConfigCc;
 
 class UpdateStatusBankSlip implements UpdateStatusBankSlipInterface
 {
@@ -25,20 +27,25 @@ class UpdateStatusBankSlip implements UpdateStatusBankSlipInterface
     protected $_request;
 	
 	protected $logger;
+	
 	protected $helper;
+	
+	protected $orderHelper;
 
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         Invoice $invoice,
         OrderFactory $orderFactory,
         Request $request,
-		Helper $helper
+		Helper $helper,
+		OrderHelper $orderHelper
     ) {
         $this->_orderFactory = $orderFactory;
         $this->_orderRepository = $orderRepository;
         $this->_invoice = $invoice;
         $this->_request = $request;
 		$this->helper = $helper;
+		$this->orderHelper = $orderHelper;
 		$this->logger = $this->helper->getLog('belluno_notifications');
     }
 
@@ -72,15 +79,24 @@ class UpdateStatusBankSlip implements UpdateStatusBankSlipInterface
 
         if($status == "Paid") {
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-            if(isset($order) /*&& $order->getStatus() != 'processing'*/ && $order->canInvoice()) {
-                $order->setState(Order::STATE_PROCESSING);
-                $order->setStatus(Order::STATE_PROCESSING);
-                $this->_orderRepository->save($order);
-
-                $totalInvoiced = $order->getTotalInvoiced();
-                if(empty($totalInvoiced)) {
-                    $this->_invoice->generateInvoice($order->getId());
-                }
+            if(isset($order)) {
+				try {
+					if($order->canInvoice()) {
+						$this->orderHelper->changeStatus($order, Order::STATE_PROCESSING, $order->getIncrementId());
+						$totalInvoiced = $order->getTotalInvoiced();
+						if(empty($totalInvoiced)) {
+							$this->_invoice->generateInvoice($order->getId());
+						}
+					}elseif($order->hasInvoices()) {
+						$payment = $order->getPayment();
+						if($payment->getMethod() == ConfigCc::METHOD && $order->getStatus() == Order::STATE_PAYMENT_REVIEW) {
+							$this->orderHelper->changeStatus($order, Order::STATE_PROCESSING, $order->getIncrementId());
+							$this->orderHelper->sendInvoiceEmail($order);
+						}
+					}
+				}catch (\Exception $e) {
+					$this->logger->info($e->getMessage());
+				}
             }else {
 				$this->logger->info(__("Not found order"));
                 throw new \Magento\Framework\Webapi\Exception(__("Not found order"), 0, \Magento\Framework\Webapi\Exception::HTTP_BAD_REQUEST);

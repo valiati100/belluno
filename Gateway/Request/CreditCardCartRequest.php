@@ -46,7 +46,7 @@ class CreditCardCartRequest implements BuilderInterface
         $payment = $paymentDO->getPayment();
         $additionalInformation = $payment->getAdditionalInformation();
         $subTotal = $quote->getSubtotal();
-        $shippingValue = $total - $subTotal;
+        $shippingValue = $total > $subTotal ? ($total - $subTotal) : 0;
 
         $result = [];
         $array = [];

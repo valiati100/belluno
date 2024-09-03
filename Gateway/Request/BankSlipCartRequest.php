@@ -37,7 +37,7 @@ class BankSlipCartRequest implements BuilderInterface
         $order = $paymentDO->getOrder();
         $total = $order->getGrandTotalAmount();
         $subTotal = $quote->getSubtotal();
-        $shippingValue = $total - $subTotal;
+        $shippingValue = $total > $subTotal ? ($total - $subTotal) : 0;
 
         $result = [];
         $array = [];

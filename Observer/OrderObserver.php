@@ -23,7 +23,11 @@ class OrderObserver implements ObserverInterface
         if($payment->getMethod() == ConfigCc::METHOD) {
             $additionalInformation = json_decode($additionalInformation["transaction_data"]["response_json"], true);
             $status = $additionalInformation["transaction"]["status"];
-			if($status != "Paid") {
+			if($status == "Client Manual Analysis" || $status == "Manual Analysis") {
+				$order->setState(Order::STATE_PAYMENT_REVIEW)->setStatus(Order::STATE_PAYMENT_REVIEW);
+				$order->save();
+			}
+			elseif($status != "Paid") {
                 $order->setState("pending")->setStatus("pending");
                 $order->save();
             }

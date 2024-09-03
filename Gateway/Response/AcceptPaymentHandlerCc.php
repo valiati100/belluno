@@ -92,9 +92,15 @@ class AcceptPaymentHandlerCc implements HandlerInterface
             /** @var Payment $payment */
             $payment->setTransactionId($order->getOrderIncrementId());
 
-            // do not close transaction so you can do a cancel() and void
-            $payment->setIsTransactionClosed(false);
-            $payment->setShouldCloseParentTransaction(false);
+			if($status == "Paid") {
+				$payment->setIsTransactionClosed(true);
+				$payment->setShouldCloseParentTransaction(true);
+			}else {
+				 // do not close transaction so you can do a cancel() and void
+				$payment->setIsTransactionClosed(false);
+				$payment->setShouldCloseParentTransaction(false);
+			}
+			
         }else {
             throw new CouldNotSaveException(
                 __("An error has occurred. Check your card details!")

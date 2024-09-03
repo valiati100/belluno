@@ -1,7 +1,11 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 	<preference for="Belluno\Magento2\Api\UpdateStatusBankSlipInterface" type="Belluno\Magento2\Model\Api\UpdateStatusBankSlip"/>
-
+	
+	<type name="Magento\Sales\Model\Order\Email\Sender\InvoiceSender">
+        <plugin name="belluno_invoice_email_handler" type="Belluno\Magento2\Plugin\InvoiceEmailHandler" />
+    </type>
+	
 	<!-- CREDIT CARD -->
 	<!-- Payment Method Facade configuration -->
 	<virtualType name="BellunoMagento2FacadeCc" type="Magento\Payment\Model\Method\Adapter">

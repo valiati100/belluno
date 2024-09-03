@@ -68,7 +68,7 @@ class Encrypt
         ]);
 
         $params = [
-            "data" => "",
+            "data" => json_encode([]),
             "method" => "get",
             "host" => "",
         ];
