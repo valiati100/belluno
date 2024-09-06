@@ -21,6 +21,9 @@ class PixCartRequest implements BuilderInterface
     /** Unit Value */
     const UNIT_VALUE = "unit_value";
 
+    /** @var SubjectReader */
+    private SubjectReader $_subjectReader;
+    
     public function __construct(SubjectReader $subjectReader)
     {
         $this->_subjectReader = $subjectReader;

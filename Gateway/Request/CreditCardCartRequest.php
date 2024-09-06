@@ -25,6 +25,9 @@ class CreditCardCartRequest implements BuilderInterface
     /** @var ScopeConfigInterface */
     private $_scopeConfig;
 
+    /** @var SubjectReader */
+    private SubjectReader $_subjectReader;
+    
     public function __construct(
         SubjectReader $subjectReader,
         ScopeConfigInterface $scopeConfig
