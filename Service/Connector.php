@@ -34,7 +34,7 @@ class Connector
             $this->_client = new Client();
             $options = [
                 "maxredirects" => 0,
-                "timeout" => 30,
+                "timeout" => 60,
                 "sslverifypeer" => false,
             ];
             $this->_client->setOptions($options);
