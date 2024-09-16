@@ -24,7 +24,7 @@ class ChangeOrderStatus
 		
 		$expirationDays = (int)$this->configBankSlip->getExpirationDays();
 		$expirationDays = ($expirationDays * 24 * 60)/$this->limitTime;
-		$this->expirationDays = $expirationDays * 2;
+		$this->expirationDays = $expirationDays * 4;
 		$this->logger = $this->helper->getLog('belluno_order_status');
     }
 	
